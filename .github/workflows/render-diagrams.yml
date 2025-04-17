@@ -1,0 +1,6 @@
+- name: Render Mermaid
+  uses: gh/mermaid/cli@v1
+  with:
+    files: 'docs/architecture/diagrams/source/**/*.mmd'
+    output: 'docs/architecture/diagrams/rendered'
+    

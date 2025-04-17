@@ -1,0 +1,115 @@
+---
+config:
+  look: classic
+  layout: elk
+  theme: forest
+---
+classDiagram
+    class OrganizationType {
+        <<enumeration>>
+        HOSPITAL
+        HOTEL
+        FIRE_PROTECTION
+        POLICE
+        OTHER
+    }
+    class VerificationStatus {
+        <<enumeration>>
+        PENDING
+        APPROVED
+        REJECTED
+    }
+    class CaseStatus {
+        <<enumeration>>
+        CREATED
+        IN_PROGRESS
+        RESOLVED
+        CANCELLED
+    }
+    class User {
+        +UUID id
+        +String name
+        +String email
+        +String phone
+        +GeoPoint location
+        +String walletAddress
+        +String encryptedPrivateKey
+        +register()
+        +reportEmergency()
+        +verifyIdentity()
+    }
+    class Organization {
+        +UUID id
+        +String name
+        +OrganizationType type
+        +String licenseNumber
+        +String address
+        +GeoPoint location
+        +String walletAddress
+        +String encryptedPrivateKey
+        +addSupportTeam()
+        +verifyEmergency()
+        +updateLocation()
+    }
+    class SupportTeam {
+        +UUID id
+        +String position
+        +String specialization
+        +Boolean isAvailable
+        +respondToEmergency()
+        +updateCaseStatus()
+    }
+    class EmergencyCase {
+        +UUID id
+        +String emergencyCode
+        +CaseStatus status
+        +GeoPoint location
+        +Timestamp createdAt
+        +String encryptedMessage
+        +updateStatus()
+        +addToBlockchain()
+    }
+    class Verification {
+        +UUID id
+        +String idCardHash
+        +String selfieHash
+        +VerificationStatus status
+        +verify()
+        +reject()
+    }
+    class BlockchainNode {
+        +UUID nodeId
+        +String publicKey
+        +String endpoint
+        +Boolean isActive
+        +validateTransaction()
+        +syncChain()
+    }
+    class SmartContract {
+        +String address
+        +String abi
+        +String bytecode
+        +execute()
+        +validateUser()
+        +logEmergency()
+    }
+    class CaseMessage {
+        +UUID id
+        +String contentHash
+        +MessageType type
+        +Timestamp sentAt
+        +encryptContent()
+    }
+    User "1" --> "1" Verification : has
+    User "1" --> "*" EmergencyCase : reports
+    Organization "1" --> "*" SupportTeam : employs
+    Organization "1" --> "*" EmergencyCase : receives
+    EmergencyCase "1" --> "*" CaseMessage : contains
+    User --> SmartContract : interactsWith
+    Organization --> SmartContract : interactsWith
+    EmergencyCase --> SmartContract : recordedOn
+    SmartContract --> BlockchainNode : executedBy
+    Verification --> SmartContract : storedOn
+    note for User "Stores identity documents\nhashed on blockchain"
+    note for EmergencyCase "All case updates are\nimmutable blockchain records"
+    note for SmartContract "Handles:\n- User verification\n- Case logging\n- Status updates"

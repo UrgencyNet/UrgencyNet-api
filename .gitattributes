@@ -9,3 +9,7 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+
+# compress diagram files
+*.mmd diff=text merge=text
+*.puml diff=text merge=text
